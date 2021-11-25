@@ -97,12 +97,12 @@ window.addEventListener("load", function () {
               data[index].Title + " &nbsp;(" + data[index].Year + ")";
             var h4 = document.createElement("h4");
             var rating=+more_data.imdbRating;
-            if(rating>8)
+            if(rating>8.5)
             {
               var recommend=document.createElement("h4");
               recommend.innerHTML="Recommended";
               recommend.setAttribute("class","recommend");
-              div.append(recommend);
+              div3.append(recommend);
             }
             h4.innerHTML = rating;
             var h5 = document.createElement("h5");
