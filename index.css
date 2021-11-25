@@ -75,6 +75,7 @@ body {
   width: 64%;
   height: 100%;
   float: right;
+  margin-top: -6%;
 }
 h2 {
   font-size: 24px;
@@ -89,6 +90,15 @@ h4,
 h5 {
   font-weight: normal;
 }
+.recommend {
+  background-color: green;
+  color: white;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 35px;
+  margin-bottom: 15px;
+}
+
 #close {
   height: 70px;
   width: 70px;
