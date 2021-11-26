@@ -1,7 +1,13 @@
 window.addEventListener("load", function () {
+  var searc_btn=document.getElementById("search");
+  searc_btn.addEventListener("input",function(){
+    debounce(displayMovies,500);
+  });
     let btn = document.getElementById("search_btn");
     btn.addEventListener("click", function () {
       let input = document.getElementById("search").value;
+      let box=document.getElementById("box");
+      box.style.display="none";
       if (input != "") {
         let url = "https://omdbapi.com/?apikey=cee3f810&s=" + input;
 
@@ -23,6 +29,7 @@ window.addEventListener("load", function () {
         noData();
       }
     });
+
   });
 
   function display(data) {
@@ -144,4 +151,71 @@ window.addEventListener("load", function () {
     );
     img.setAttribute("id", "error_img");
     container.append(img);
+  }
+  async function searchMovies()
+  {
+    let key="";
+    let name=document.getElementById("search").value;
+    
+      let url=`https://omdbapi.com/?apikey=cee3f810&s=${name}`;
+      let res=await fetch(url);
+      let data=await res.json();
+      if(data.Response=="True")
+      {
+        return data;
+      } 
+  }
+
+  async function displayMovies()
+  {
+    let box=document.getElementById("box");
+    let name=document.getElementById("search").value;
+    if(name.length==0)
+    {
+      box.style.display="none";
+    }
+    let movie_data=await searchMovies();
+    
+    if(movie_data===undefined)
+    {
+      return false;
+    }
+    
+    box.style.display="flex";
+   box.innerHTML="";
+    for(var i=0;i<movie_data.Search.length;i++)
+    {
+
+      let div1=document.createElement("div");
+      div1.setAttribute("class","inner_box");
+  
+      let div2=document.createElement("div");
+      let img=document.createElement("img");
+      var poster = movie_data.Search[i].Poster;
+      if (poster == "N/A") {
+        poster =
+          "https://st2.depositphotos.com/3732989/5330/i/450/depositphotos_53304205-stock-photo-no-image-available.jpg";
+      }
+      img.setAttribute("src",poster);
+      img.setAttribute("class","inner_img");
+      div2.append(img);
+  
+      let div3=document.createElement("div");
+      let a1=document.createElement("a");
+      a1.setAttribute("class","inner_txt");
+      a1.innerHTML=movie_data.Search[i].Title;
+      div3.append(a1);
+  
+      div1.append(div2,div3);
+      box.append(div1);
+    }
+
+  }
+let bomb;
+  function debounce(func,delay)
+  {
+    clearInterval(bomb);
+    bomb=setTimeout(function(){
+        func();
+    },delay);
   }
