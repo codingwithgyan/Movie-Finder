@@ -1,4 +1,6 @@
+
 window.addEventListener("load", function () {
+  displayTrend();
   var searc_btn=document.getElementById("search");
   searc_btn.addEventListener("input",function(){
     debounce(displayMovies,500);
@@ -9,7 +11,7 @@ window.addEventListener("load", function () {
       let box=document.getElementById("box");
       box.style.display="none";
       if (input != "") {
-        let url = "https://omdbapi.com/?apikey=cee3f810&s=" + input;
+        let url = `https://omdbapi.com/?apikey=cee3f810&s=` + input;
 
         async function getData() {
           try {
@@ -72,7 +74,7 @@ window.addEventListener("load", function () {
         async function getMoreData() {
           try {
             let id = data[index].imdbID;
-            let url = "https://omdbapi.com/?apikey=cee3f810&i=" + id;
+            let url = `https://omdbapi.com/?apikey=cee3f810&i=` + id;
             var res = await fetch(url);
             var more_data = await res.json();
             console.log(more_data);
@@ -218,4 +220,54 @@ let bomb;
     bomb=setTimeout(function(){
         func();
     },delay);
+  }
+  async function getTrend(url)
+  {
+      let res=await fetch(url);
+      let data=await res.json();
+      return data.results;
+  }
+  async function displayTrend()
+  {
+    let url=`https://api.themoviedb.org/3/trending/all/day?api_key=858a23f2ce58fe1ba8cf3c8721c6973a`;
+    let data=await getTrend(url);
+    if(data==undefined)
+    {
+      return false;
+    }
+    console.log(data);
+
+    //////////////////////////////////////////////////////
+
+    var container = document.getElementById("container");
+    container.innerHTML = "";
+    for (var i = 0; i < data.length; i++) {
+      if(data[i].original_title!=undefined)
+      {
+        var div1 = document.createElement("div");
+      div1.setAttribute("value", i);
+      div1.setAttribute("class", "poster");
+      div1.style.cursor = "pointer";
+      var div2 = document.createElement("div");
+      var img = document.createElement("img");
+      var name = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/"+data[i].poster_path;
+      if (name == "N/A") {
+        name =
+          "https://st2.depositphotos.com/3732989/5330/i/450/depositphotos_53304205-stock-photo-no-image-available.jpg";
+      }
+      img.setAttribute("src", name);
+      img.setAttribute("class", "img");
+      div2.append(img);
+      var div3 = document.createElement("div");
+      div3.innerHTML = data[i].original_title;
+      div3.setAttribute("class", "txt");
+      var div4 = document.createElement("div");
+      div4.setAttribute("class", "txt");
+      div4.innerHTML = data[i].release_date;
+
+      div1.append(div2, div3, div4);
+      container.append(div1);
+      }
+      
+    }
   }
